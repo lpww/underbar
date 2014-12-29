@@ -66,8 +66,8 @@
     // it uses the iteration helper `each`, which you will need to write.
     var result = -1;
 
-    _.each(array, function(item, index) {
-      if (item === target && result === -1) {
+    _.each(array, function(element, index) {
+      if (element === target && result === -1) {
         result = index;
       }
     });
@@ -173,27 +173,18 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+    var copy = collection;
 
     if(accumulator === undefined){
-
-      accumulator = collection[0];
-
-      _.each(collection, function(element, index, list){
-        if(index !== 0){
-          accumulator = iterator(accumulator, element);
-        } 
-       });
-
-      return accumulator;
-      
-    } else {
-
-      _.each(collection, function(element, index, list){
-      accumulator = iterator(accumulator, element);
-      });
-
-      return accumulator;
+      accumulator = copy[0]
+      copy.splice(0,1);
     }
+
+    _.each(collection, function(element, index, list){
+    accumulator = iterator(accumulator, element);
+    });
+
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -212,9 +203,9 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-      return _.reduce(collection, function(result, element){
+      return _.reduce(collection, function(accumulator, element){
         
-        if(!result){
+        if(!accumulator){
           return false;
         } 
         if(iterator === undefined) {
@@ -230,6 +221,11 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    var result = false;
+    _.each(collection, function(element, index, list){
+      result =  iterator(element) ? true : false;
+    })
+    return result;
   };
 
 
