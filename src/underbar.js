@@ -327,7 +327,7 @@
       if (alreadyCalled[arg]) {
         result = alreadyCalled[arg];
       }
-      
+
       return result;
     };
   };
@@ -339,9 +339,9 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
-    var parameters = _.last(arguments, arguments.length-2);
-    return setTimeout(function(){
-      return func.apply(this, parameters);
+    var parameters = Array.prototype.slice.call(arguments);;
+    setTimeout(function(){
+      func.apply(this, parameters.slice(2, parameters.length));
     }, wait);
   };
 
