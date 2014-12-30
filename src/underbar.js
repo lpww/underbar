@@ -264,6 +264,14 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    return _.reduce(arguments, function(memo, extension){
+      _.each(extension, function(element, key){
+        if(!memo[key]){
+          memo[key] = element;
+        }
+      });
+      return memo;
+    });
   };
 
 
@@ -307,6 +315,21 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var alreadyCalled = {};
+    var result;
+
+    return function(arg) {
+      if (!alreadyCalled[arg]) {
+        alreadyCalled[arg] = func.apply(this, arguments);
+        result = alreadyCalled[arg];
+      } 
+
+      if (alreadyCalled[arg]) {
+        result = alreadyCalled[arg];
+      }
+      
+      return result;
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -316,8 +339,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var parameters = _.last(arguments, arguments.length-2);
+    return setTimeout(function(){
+      return func.apply(this, parameters);
+    }, wait);
   };
-
 
   /**
    * ADVANCED COLLECTION OPERATIONS
