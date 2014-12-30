@@ -47,16 +47,16 @@
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
   _.each = function(collection, iterator) {
-  if(!collection.length){  
-    for(var key in collection){
-      iterator(collection[key], key, collection);
+    if(!collection.length){  
+      for(var key in collection){
+        iterator(collection[key], key, collection);
+      }
+    } else {
+      for(var i = 0; i < collection.length; i++){
+        iterator(collection[i], i, collection);
+      }
     }
-  } else {
-    for(var i = 0; i < collection.length; i++){
-      iterator(collection[i], i, collection);
-    }
-  }
-};
+  };
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
@@ -253,13 +253,11 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
-    return _.reduce(arguments, function(memo, element){
-      var steve = memo;
-      _.each(element, function(element, key){
-        console.log(steve[key] + ',' + element[key]);
-        steve.key = element.key;
-      })
-      return steve;
+    return _.reduce(arguments, function(memo, extension){
+      _.each(extension, function(element, key){
+        memo[key] = element;
+      });
+      return memo;
     });
   };
 
