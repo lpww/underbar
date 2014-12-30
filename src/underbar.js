@@ -173,11 +173,9 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    var copy = collection;
-
     if(accumulator === undefined){
-      accumulator = copy[0]
-      copy.splice(0,1);
+      accumulator = collection[0]
+      collection.splice(0,1);
     }
 
     _.each(collection, function(element, index, list){
@@ -223,7 +221,7 @@
     // TIP: There's a very clever way to re-use every() here.
     return _.reduce(collection, function(accumulator, element){
       if(accumulator){
-        return accumulator;
+        return true;
       }
 
       if(iterator === undefined){
@@ -255,6 +253,14 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+    return _.reduce(arguments, function(memo, element){
+      var steve = memo;
+      _.each(element, function(element, key){
+        console.log(steve[key] + ',' + element[key]);
+        steve.key = element.key;
+      })
+      return steve;
+    });
   };
 
   // Like extend, but doesn't ever overwrite a key that already
@@ -326,6 +332,14 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var copy = array.slice(0, array.length);
+    var shuffled = [];
+    while(copy.length){
+      var random = Math.floor(Math.random() * copy.length);
+      shuffled.push(copy[random]);
+      copy.splice(random, 1);
+    }
+    return shuffled;
   };
 
 
